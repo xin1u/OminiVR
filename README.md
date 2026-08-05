@@ -1,12 +1,22 @@
-# 🎞️ OminiVR
+<div align="center">
 
-**Joint Video-Audio Conditional Generation for Restoring Degraded Historical Films**
+# 🎞️ OmniVR
 
-**Authors:** Xin Lu, Zihao Fan, Mingchen Zhong, Jie Huang, Xueyang Fu, Zheng-Jun Zha
+### Joint Video-Audio Conditional Generation for Restoring Degraded Historical Films
 
-<a href='https://xin1u.github.io/OminiVR_PAGE/'><img src='https://img.shields.io/badge/Project-Page-Green'></a> &nbsp;
-<a href="https://huggingface.co/xin1u/OmniVR"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model%20%26%20Data-blue"></a> &nbsp;
-<a href="LICENSE"><img src="https://img.shields.io/badge/Code%20License-Apache--2.0-lightgrey.svg"></a>
+**Xin Lu**<sup>1†</sup> &nbsp; **Zihao Fan**<sup>1†</sup> &nbsp; **Mingchen Zhong**<sup>1</sup> &nbsp; **Jie Huang**<sup>2‡</sup> &nbsp; **Xueyang Fu**<sup>1✉</sup> &nbsp; **Zheng-Jun Zha**<sup>1</sup>
+
+<sup>1</sup>University of Science and Technology of China &nbsp;&nbsp; <sup>2</sup>JD Explore Academy
+
+<sup>†</sup> Equal contribution &nbsp;&nbsp; <sup>‡</sup> Project leader &nbsp;&nbsp; <sup>✉</sup> Corresponding author
+
+<a href="https://xin1u.github.io/OminiVR_PAGE/"><img src="https://img.shields.io/badge/Project-Page-6D28D9?style=for-the-badge" alt="Project Page"></a>
+<a href="https://huggingface.co/xin1u/OmniVR"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Weights%20%26%20Data-OmniVR-FFD21E?style=for-the-badge" alt="Hugging Face"></a>
+<a href="LICENSE"><img src="https://img.shields.io/badge/Code-Apache--2.0-181717?style=for-the-badge" alt="License"></a>
+
+**First joint audio-video generative restoration** &nbsp;·&nbsp; **22B multimodal DiT** &nbsp;·&nbsp; **200-clip benchmark**
+
+</div>
 
 <p align="center">
   <img src="assets/teaser.png" width="100%">
@@ -57,6 +67,17 @@ three aspects.
 
 ---
 
+### ✨ Key Contributions
+
+|  | Design | What it does |
+|:---:|---|---|
+| **1** | 🎨 **Joint AV Degradation** | A pipeline that simulates realistic old-film corruptions for both the visual and acoustic streams, producing paired LQ audio-video for training. |
+| **2** | 🧩 **Prior-Preserving AV2AV** | A 22B multimodal DiT adapted via LoRA (rank 384) with paired latent conditions and prompt annealing, maximally retaining the generative prior. |
+| **3** | 🎬 **Coherent Long-Video Recovery** | First-frame (I2V) chaining, loss reweighting, and waveform supervision for temporally consistent, audio-fidelity-preserving long-form restoration. |
+| **4** | 📈 **OmniVRBench** | 200 real historical film clips across a `with_gt` (71-clip, full-reference) and a `no_gt` (129-clip, no-reference) track. |
+
+---
+
 ### 🚀 Getting Started
 
 #### 1️⃣ Clone the Repository
@@ -68,7 +89,7 @@ cd OminiVR
 
 #### 2️⃣ Install Dependencies
 
-OminiVR is a LoRA adapter for Lightricks' [LTX-2](https://github.com/Lightricks/LTX-2)
+OmniVR is a LoRA adapter for Lightricks' [LTX-2](https://github.com/Lightricks/LTX-2)
 and depends on its `ltx-core` / `ltx-trainer` / `ltx-pipelines` packages,
 which are not vendored here:
 
@@ -82,14 +103,14 @@ export OMINIVR_DEPS_ROOT=/path/to/ltx-2/packages
 #### 3️⃣ Download Model Weights and Data
 
 All large binaries (base model, LoRA checkpoints, TinyDecoder, evaluation
-set) are hosted on Hugging Face rather than in this git repository. OminiVR's
+set) are hosted on Hugging Face rather than in this git repository. OmniVR's
 own weights, data, and reference outputs are all in a single repo,
 [`xin1u/OmniVR`](https://huggingface.co/xin1u/OmniVR):
 
 | What | Source | Notes |
 |---|---|---|
 | Base model + Gemma text encoder | [`Lightricks/LTX-2.3`](https://huggingface.co/Lightricks) | official upstream weights; governed by the [LTX-2 Community License](https://github.com/Lightricks/LTX-2/blob/main/LICENSE) |
-| OminiVR LoRA weights (`step_01800`, `step_02400`) | [`xin1u/OmniVR`](https://huggingface.co/xin1u/OmniVR)`/weights/` | see [NOTICE](NOTICE) — these are a Derivative of LTX-2 |
+| OmniVR LoRA weights (`step_01800`, `step_02400`) | [`xin1u/OmniVR`](https://huggingface.co/xin1u/OmniVR)`/weights/` | see [NOTICE](NOTICE) — these are a Derivative of LTX-2 |
 | TinyDecoder weights (`taeltx2_3_wide.pth`) | [`xin1u/OmniVR`](https://huggingface.co/xin1u/OmniVR)`/tinydecoder/` | see [`ckpt/tinydecoder/README.md`](ckpt/tinydecoder/README.md) |
 | OmniBench evaluation set | [`xin1u/OmniVR`](https://huggingface.co/xin1u/OmniVR)`/omnibench/` | see [`data/omnibench/README.md`](data/omnibench/README.md) |
 | Reference inference outputs | [`xin1u/OmniVR`](https://huggingface.co/xin1u/OmniVR)`/predictions/` | precomputed restorations for both tracks, for quick comparison without rerunning inference |
@@ -130,20 +151,18 @@ python scripts/infer.py \
     --audio_denoise --audio_denoise_highpass 200 --audio_denoise_over 2.5 --audio_denoise_floor 0.03
 ```
 
-Three CFG sampling strategies are available via `--strategy`:
+---
 
-- `no_cfg` — guidance_scale=1.0, single forward per step (fastest)
-- `empty_cfg` — positive=SR prompt, negative=empty string (matches training distribution)
-- `neg_cfg` — positive=SR prompt, negative=negative prompt (strongest enhancement, used above)
-- `all` — runs all three strategies on the same inputs, for comparison
+### ⚙️ Key Options
 
-Pass `--lq_grayscale` when restoring genuinely black-and-white old film
-footage — training degraded ~50% of clips to grayscale, so the model expects
-a grayscale LQ signal for that case.
-
-**Multi-GPU**: pass `--num_gpus N` to data-parallelize across `N` GPUs (each
-GPU processes a disjoint subset of input videos; round-robin assignment).
-There is no FSDP/single-video-sharded inference mode in this release.
+| Option | Description |
+|---|---|
+| `--strategy no_cfg` | guidance_scale=1.0, single forward per step (**fastest**) |
+| `--strategy empty_cfg` | positive=SR prompt, negative=empty string (matches training distribution) |
+| `--strategy neg_cfg` | positive=SR prompt, negative=negative prompt (**strongest enhancement**, used for the paper's numbers) |
+| `--strategy all` | runs all three strategies on the same inputs, for comparison |
+| `--lq_grayscale` | Pass when restoring genuinely black-and-white old film footage — training degraded ~50% of clips to grayscale, so the model expects a grayscale LQ signal for that case. |
+| `--num_gpus N` | Data-parallelize across `N` GPUs (each GPU processes a disjoint subset of input videos, round-robin). There is no FSDP/single-video-sharded inference mode in this release. |
 
 **TinyDecoder**: if `ckpt/tinydecoder/taeltx2_3_wide.pth` is present,
 inference uses the fast TinyDecoder path (keeps the transformer resident on
@@ -158,7 +177,9 @@ Drag the divider to compare the degraded input against the OmniVR
 restoration, and A/B the soundtrack — see the [project page](https://xin1u.github.io/OminiVR_PAGE/)
 for the full interactive version with all clips.
 
-<img src="./assets/demo.png" width="850" />
+<p align="center">
+  <img src="./assets/demo.png" width="850">
+</p>
 
 ---
 
@@ -180,7 +201,9 @@ The overview of **OmniVR**. This framework features:
   (71-clip, full-reference) talking-head track and a `no_gt` (129-clip,
   no-reference) real-archival track.
 
-<img src="./assets/architecture.png" width="1000" />
+<p align="center">
+  <img src="./assets/architecture.png" width="1000">
+</p>
 
 ---
 
@@ -191,21 +214,32 @@ clips) and real (`no_gt`, 129 clips) tracks across visual, audio, and
 sync metrics, and generalizes to the independently curated RTN old-film
 benchmark:
 
-| Track | MUSIQ↑ | CLIP-IQA↑ | DNSMOS↑ | LSE-C↑ |
-|---|---|---|---|---|
+| Track | MUSIQ ↑ | CLIP-IQA ↑ | DNSMOS ↑ | LSE-C ↑ |
+|---|:---:|:---:|:---:|:---:|
 | Controlled (`with_gt`) — best baseline | 45.54 | 0.268 | 2.12 | 2.32 |
 | Controlled (`with_gt`) — **OmniVR** | **71.17** | **0.543** | **2.70** | **3.52** |
 | Real (`no_gt`) — best baseline | 52.38 | 0.421 | 2.21 | 1.05 |
 | Real (`no_gt`) — **OmniVR** | **61.87** | **0.444** | **2.43** | **1.12** |
 
 A pairwise human preference study (12 annotators, 129 real clips) prefers
-OmniVR 80.0% overall, a **+56.7 percentage point** gain over the strongest
+OmniVR **80.0%** overall, a **+56.7 percentage point** gain over the strongest
 baseline. Full tables, ablations, and qualitative comparisons are in the
 paper.
 
 ---
 
 ### 📈 Evaluation
+
+**OmniVRBench** contains 200 clips at 5.04s / 24fps / 121 frames, split into
+two tracks by whether ground truth exists:
+
+| | `with_gt/` (71 clips) | `no_gt/` (129 clips) |
+|---|---|---|
+| **Content** | Talking-head / speaking subjects | Real historical film footage |
+| **Source** | LQ synthesized from HQ via the degradation pipeline; GT = clean HQ | Collected real old films (inherently LQ) |
+| **Ground truth** | ✅ frame-aligned, same filenames | ❌ does not exist |
+| **Evaluation track** | **Controlled** (full-reference) | **Real** (no-reference) |
+| **Applicable metrics** | PSNR/SSIM/LPIPS, PESQ/STOI/SI-SDR, LSE-C/D, AV-Align, plus NR-IQA | NR-IQA only: MUSIQ/CLIP-IQA/MANIQA + no-reference audio |
 
 See [`data/omnibench/README.md`](data/omnibench/README.md) for the dataset
 layout and the `with_gt`/`no_gt` track split. The evaluation script itself
@@ -222,28 +256,28 @@ you want to compare against them without rerunning inference yourself.
 
 ### 🤗 Feedback & Support
 
-We welcome feedback and issues. Thank you for trying **OminiVR**!
+We welcome feedback and issues. Thank you for trying **OmniVR**!
 
 ---
 
 ### 📄 License & Acknowledgments
 
-OminiVR's own code (`src/`, `scripts/`, excluding the vendored TinyDecoder
+OmniVR's own code (`src/`, `scripts/`, excluding the vendored TinyDecoder
 noted below) is licensed under [Apache-2.0](LICENSE).
 
-The released LoRA weights are a **Derivative of LTX-2** and are governed by
-the [LTX-2 Community License Agreement](https://github.com/Lightricks/LTX-2/blob/main/LICENSE),
-not Apache-2.0 — see [NOTICE](NOTICE) for details. The base LTX-2.3 model and
-Gemma text encoder must be obtained from their official sources and are
-likewise subject to that license.
+> ⚠️ The released LoRA weights are a **Derivative of LTX-2** and are governed by
+> the [LTX-2 Community License Agreement](https://github.com/Lightricks/LTX-2/blob/main/LICENSE),
+> **not** Apache-2.0 — see [NOTICE](NOTICE) for details. The base LTX-2.3 model and
+> Gemma text encoder must be obtained from their official sources and are
+> likewise subject to that license.
 
 `src/ominivr/tiny_decoder.py` is adapted from Ollin Boer Bohan's
 Seraena/TAESD (MIT License) — full attribution in [NOTICE](NOTICE).
 
 We gratefully acknowledge:
 
-* **LTX-2** — [https://github.com/Lightricks/LTX-2](https://github.com/Lightricks/LTX-2)
-* **Seraena / TAESD** — [https://github.com/madebyollin/seraena](https://github.com/madebyollin/seraena)
+* [**LTX-2**](https://github.com/Lightricks/LTX-2) — the audio-video generation backbone
+* [**Seraena / TAESD**](https://github.com/madebyollin/seraena) — the tiny decoder this repository vendors
 
 ---
 
