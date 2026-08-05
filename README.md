@@ -42,14 +42,17 @@ export OMINIVR_DEPS_ROOT=/path/to/ltx-2/packages
 ## Downloading weights and data
 
 All large binaries (base model, LoRA checkpoints, evaluation set) are hosted
-on Hugging Face rather than in this git repository.
+on Hugging Face rather than in this git repository. OminiVR's own weights,
+data, and reference outputs are all in a single repo,
+[`xin1u/OmniVR`](https://huggingface.co/xin1u/OmniVR):
 
 | What | Source | Notes |
 |---|---|---|
 | Base model + Gemma text encoder | [`Lightricks/LTX-2.3`](https://huggingface.co/Lightricks) | official upstream weights; governed by the [LTX-2 Community License](https://github.com/Lightricks/LTX-2/blob/main/LICENSE) |
-| OminiVR LoRA weights (`step_01800`, `step_02400`) | `xin1u/OminiVR-weights` *(placeholder — upload pending)* | see [NOTICE](NOTICE) — these are a Derivative of LTX-2 |
-| TinyDecoder weights (`taeltx2_3_wide.pth`) | `xin1u/OminiVR-weights` *(placeholder — upload pending)* | see [`ckpt/tinydecoder/README.md`](ckpt/tinydecoder/README.md) |
-| OmniBench evaluation set | `xin1u/OminiVR-omnibench` *(placeholder — upload pending)* | see [`data/omnibench/README.md`](data/omnibench/README.md) |
+| OminiVR LoRA weights (`step_01800`, `step_02400`) | [`xin1u/OmniVR`](https://huggingface.co/xin1u/OmniVR)`/weights/` | see [NOTICE](NOTICE) — these are a Derivative of LTX-2 |
+| TinyDecoder weights (`taeltx2_3_wide.pth`) | [`xin1u/OmniVR`](https://huggingface.co/xin1u/OmniVR)`/tinydecoder/` | see [`ckpt/tinydecoder/README.md`](ckpt/tinydecoder/README.md) |
+| OmniBench evaluation set | [`xin1u/OmniVR`](https://huggingface.co/xin1u/OmniVR)`/omnibench/` | see [`data/omnibench/README.md`](data/omnibench/README.md) |
+| Reference inference outputs | [`xin1u/OmniVR`](https://huggingface.co/xin1u/OmniVR)`/predictions/` | precomputed restorations for both tracks, for quick comparison without rerunning inference |
 
 We release two LoRA checkpoints from the same training run
 (`v5_tav2av_hq`), matching the two evaluation tracks in the paper:
@@ -58,6 +61,10 @@ We release two LoRA checkpoints from the same training run
 - **`step_02400`** — used for the `with_gt` / talking-head (full-reference) track
 
 ```bash
+huggingface-cli download xin1u/OmniVR weights/ominivr_lora_step_01800.safetensors --local-dir .
+huggingface-cli download xin1u/OmniVR weights/ominivr_lora_step_02400.safetensors --local-dir .
+huggingface-cli download xin1u/OmniVR tinydecoder/taeltx2_3_wide.pth --local-dir ckpt
+
 export OMINIVR_MODEL_PATH=/path/to/ltx-2.3-22b-dev.safetensors
 export OMINIVR_TEXT_ENCODER_PATH=/path/to/gemma-3-12b-it-qat-q4_0-unquantized
 export OMINIVR_LORA_STRUCTURE=/path/to/ltx-2.3-22b-distilled-lora-384.safetensors
@@ -110,6 +117,11 @@ layout and the `with_gt`/`no_gt` track split. The evaluation script itself
 (PSNR/SSIM/LPIPS, PESQ/STOI/SI-SDR, LSE-C/D, AV-Align, NR-IQA, etc.) is not
 included in this release — predictions and ground truth match by filename,
 so any standard implementation of these metrics can be plugged in directly.
+
+Precomputed reference outputs (`neg_cfg`, the strategy used for the paper's
+numbers) for both tracks are available under `predictions/` in the
+[`xin1u/OmniVR`](https://huggingface.co/xin1u/OmniVR) Hugging Face repo, if
+you want to compare against them without rerunning inference yourself.
 
 ## License
 

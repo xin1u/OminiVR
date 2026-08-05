@@ -18,15 +18,14 @@ omnibench/
 
 ## Download
 
-This directory ships without the actual video files — they are hosted on
-Hugging Face Datasets:
+This directory ships without the actual video files — they are hosted in the
+[`xin1u/OmniVR`](https://huggingface.co/xin1u/OmniVR) Hugging Face repo,
+under `omnibench/`:
 
 ```bash
-huggingface-cli download xin1u/OminiVR-omnibench --repo-type dataset --local-dir data/omnibench
+huggingface-cli download xin1u/OmniVR --include "omnibench/*" --local-dir data
+# manifest.json, with_gt/, no_gt/ land under data/omnibench/, matching the layout below
 ```
-
-(Repo name is a placeholder until the dataset upload is finalized — see the
-main README for the current status.)
 
 ## What the two groups are for
 

@@ -13,11 +13,9 @@ License) — see [`/NOTICE`](../../NOTICE) for full attribution.
 ## Download
 
 ```bash
-huggingface-cli download xin1u/OminiVR-weights taeltx2_3_wide.pth --local-dir ckpt/tinydecoder
+huggingface-cli download xin1u/OmniVR tinydecoder/taeltx2_3_wide.pth --local-dir ckpt
+# lands at ckpt/tinydecoder/taeltx2_3_wide.pth
 ```
-
-(Repo name is a placeholder until the weights upload is finalized — see the
-main README for current status.)
 
 If this file is absent, `scripts/infer.py` falls back to the full VAE decoder
 automatically (slower, more memory).
