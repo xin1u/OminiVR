@@ -10,9 +10,9 @@
 
 <sup>†</sup> Equal contribution &nbsp;&nbsp; <sup>‡</sup> Project leader &nbsp;&nbsp; <sup>✉</sup> Corresponding author
 
-<a href="https://xin1u.github.io/OminiVR_PAGE/"><img src="https://img.shields.io/badge/Project-Page-6D28D9?style=for-the-badge" alt="Project Page"></a>
-<a href="https://huggingface.co/xin1u/OmniVR"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Weights%20%26%20Data-OmniVR-FFD21E?style=for-the-badge" alt="Hugging Face"></a>
-<a href="LICENSE"><img src="https://img.shields.io/badge/Code-Apache--2.0-181717?style=for-the-badge" alt="License"></a>
+<a href="https://xin1u.github.io/OminiVR_PAGE/"><img src="https://img.shields.io/badge/Project-Page-Green"></a> &nbsp;
+<a href="https://huggingface.co/xin1u/OmniVR"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model%20%26%20Data-blue"></a> &nbsp;
+<a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-lightgrey.svg"></a>
 
 **First joint audio-video generative restoration** &nbsp;·&nbsp; **22B multimodal DiT** &nbsp;·&nbsp; **200-clip benchmark**
 
