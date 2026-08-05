@@ -8,7 +8,7 @@
 <a href="https://huggingface.co/xin1u/OmniVR"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model%20%26%20Data-blue"></a> &nbsp;
 <a href="LICENSE"><img src="https://img.shields.io/badge/Code%20License-Apache--2.0-lightgrey.svg"></a>
 
-<img src="./assets/teaser.png" width="100%"/>
+<img src="./assets/teaser.png" width="100%">
 
 ---
 
