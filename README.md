@@ -249,7 +249,7 @@ We gratefully acknowledge:
 
 ### 📞 Contact
 
-* **Xin Lu** — see the [project page](https://xin1u.github.io/OminiVR_PAGE/) for contact details.
+Please feel free to contact us if there is any question (luxion@mail.ustc.edu.cn).
 
 ---
 
