@@ -1,0 +1,57 @@
+OminiVR
+Copyright 2026 xin1u
+
+This product includes software developed by xin1u, licensed under the
+Apache License, Version 2.0 (see LICENSE).
+
+================================================================================
+1. LTX-2 Derivative Notice
+================================================================================
+
+The OminiVR LoRA weights distributed alongside this repository (and the
+`patchify_proj` expansion / channel-concat patching code in
+`src/ominivr/lora_patch.py` that they depend on at inference time) are a
+fine-tune of Lightricks' LTX-2.3 22B model and therefore constitute a
+"Derivative of LTX-2" as defined by the LTX-2 Community License Agreement.
+
+Use of the OminiVR LoRA weights (and of the base LTX-2.3 model and Gemma
+text encoder required to run them) is subject to the LTX-2 Community
+License Agreement in full, including its Attachment A use restrictions:
+
+    https://github.com/Lightricks/LTX-2/blob/main/LICENSE
+
+This Apache-2.0 license applies only to OminiVR's own inference source
+code (this repository's `src/` and `scripts/` directories, excluding the
+vendored TinyDecoder component noted below). It does NOT relicense the
+LTX-2 base model, the Gemma text encoder, or the OminiVR LoRA weights
+themselves — those remain governed by the LTX-2 Community License
+Agreement and must be obtained from their respective official sources.
+
+================================================================================
+2. TinyDecoder (src/ominivr/tiny_decoder.py)
+================================================================================
+
+`src/ominivr/tiny_decoder.py` is adapted from Seraena / TAESD, retrained
+for LTX-2.3's 128-channel video latent space. The original work is:
+
+    Copyright (c) 2023 Ollin Boer Bohan
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+Upstream project: https://github.com/madebyollin/seraena

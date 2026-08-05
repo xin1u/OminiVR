@@ -1,0 +1,38 @@
+[project]
+name = "ominivr"
+version = "0.1.0"
+description = "OminiVR — joint audio-video restoration for degraded historical films (LoRA fine-tune of LTX-2.3 22B)"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+dependencies = [
+    "accelerate>=1.2.1",
+    "av>=14.2.1",
+    "imageio>=2.37.0",
+    "imageio-ffmpeg>=0.6.0",
+    "opencv-python>=4.11.0.86",
+    "peft>=0.14.0",
+    "pydantic>=2.10.4",
+    "rich>=13.9.4",
+    "safetensors>=0.5.0",
+    "scipy>=1.13.0",
+    "torch>=2.6.0",
+    "torchaudio>=2.7.0",
+    "torchvision>=0.21.0",
+    "tqdm>=4.67.0",
+]
+
+[project.urls]
+Homepage = "https://xin1u.github.io/OminiVR_PAGE/"
+Repository = "https://github.com/xin1u/OminiVR"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]

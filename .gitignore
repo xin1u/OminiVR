@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+*.egg-info/
+.venv/
+venv/
+*.safetensors
+*.pth
+*.pt
+/data/omnibench/with_gt/
+/data/omnibench/no_gt/
