@@ -10,6 +10,7 @@
 
 <sup>†</sup> Equal contribution &nbsp;&nbsp; <sup>‡</sup> Project leader &nbsp;&nbsp; <sup>✉</sup> Corresponding author
 
+<a href="https://arxiv.org/abs/2608.04224"><img src="https://img.shields.io/badge/arXiv-Paper-red?logo=arxiv"></a> &nbsp;
 <a href="https://xin1u.github.io/OminiVR_PAGE/"><img src="https://img.shields.io/badge/Project-Page-Green"></a> &nbsp;
 <a href="https://huggingface.co/xin1u/OmniVR"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model%20%26%20Data-blue"></a> &nbsp;
 <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-lightgrey.svg"></a>
@@ -54,6 +55,8 @@ three aspects.
 
 ### 📰 News
 
+- **Aug 2026 — Paper released on arXiv**:
+  [arXiv:2608.04224](https://arxiv.org/abs/2608.04224). 📄
 - **Aug 2026 — Inference code, LoRA weights, and OmniVRBench released** on
   GitHub and [Hugging Face](https://huggingface.co/xin1u/OmniVR). 🎉
 
@@ -289,10 +292,13 @@ Please feel free to contact us if there is any question (luxion@mail.ustc.edu.cn
 
 ### 📜 Citation
 
+Paper: [arXiv:2608.04224](https://arxiv.org/abs/2608.04224)
+
 ```bibtex
 @article{lu2026omnivr,
   title={OmniVR: Joint Video-Audio Conditional Generation for Restoring Degraded Historical Films},
   author={Lu, Xin and Fan, Zihao and Zhong, Mingchen and Huang, Jie and Fu, Xueyang and Zha, Zheng-Jun},
+  journal={arXiv preprint arXiv:2608.04224},
   year={2026}
 }
 ```
