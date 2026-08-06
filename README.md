@@ -4,9 +4,9 @@
 
 ### Joint Video-Audio Conditional Generation for Restoring Degraded Historical Films
 
-**Xin Lu**<sup>1†</sup> &nbsp; **Zihao Fan**<sup>1†</sup> &nbsp; **Mingchen Zhong**<sup>1</sup> &nbsp; **Jie Huang**<sup>2‡</sup> &nbsp; **Xueyang Fu**<sup>1✉</sup> &nbsp; **Zheng-Jun Zha**<sup>1</sup>
+**Xin Lu**<sup>†</sup> &nbsp; **Zihao Fan**<sup>†</sup> &nbsp; **Jie Huang**<sup>‡</sup> &nbsp; **Mingchen Zhong** &nbsp; **Xueyang Fu**<sup>✉</sup> &nbsp; **Zheng-Jun Zha**
 
-<sup>1</sup>University of Science and Technology of China &nbsp;&nbsp; <sup>2</sup>JD Explore Academy
+University of Science and Technology of China (USTC)
 
 <sup>†</sup> Equal contribution &nbsp;&nbsp; <sup>‡</sup> Project leader &nbsp;&nbsp; <sup>✉</sup> Corresponding author
 
