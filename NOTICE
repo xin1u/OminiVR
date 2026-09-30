@@ -1,37 +1,29 @@
-OminiVR
+OmniVR and OmniVR-Flash
 Copyright 2026 xin1u
 
-This product includes software developed by xin1u, licensed under the
-Apache License, Version 2.0 (see LICENSE).
+1. Current inference bundle
 
-================================================================================
-1. LTX-2 Derivative Notice
-================================================================================
+The author-supplied inference bundle includes Lightricks LTX model definitions
+and runtime code. The complete LTX-2 Community License Agreement, including
+Attachment A, is retained in LICENSE and applies to LTX-derived components
+and model weights. Upstream copyright and attribution notices are retained.
 
-The OminiVR LoRA weights distributed alongside this repository (and the
-`patchify_proj` expansion / channel-concat patching code in
-`src/ominivr/lora_patch.py` that they depend on at inference time) are a
-fine-tune of Lightricks' LTX-2.3 22B model and therefore constitute a
-"Derivative of LTX-2" as defined by the LTX-2 Community License Agreement.
+The Flash package includes the project-provided UltraTinyVAE implementation,
+its architecture configuration, checkpoint fusion, and joint inference code.
 
-Use of the OminiVR LoRA weights (and of the base LTX-2.3 model and Gemma
-text encoder required to run them) is subject to the LTX-2 Community
-License Agreement in full, including its Attachment A use restrictions:
+Release integration changes on 2026-09-30 add portable multistep launchers,
+bundle the optional legacy TinyDecoder, and retain the earlier environment
+variable interface. No training code or model weights are bundled here.
 
-    https://github.com/Lightricks/LTX-2/blob/main/LICENSE
+The Apache-2.0 text from the earlier repository is preserved in
+licenses/Apache-2.0.txt for historical attribution. It does not replace the
+LTX-2 Community License or relicense LTX-derived model weights. The Gemma
+text encoder is obtained separately under Google's upstream terms.
 
-This Apache-2.0 license applies only to OminiVR's own inference source
-code (this repository's `src/` and `scripts/` directories, excluding the
-vendored TinyDecoder component noted below). It does NOT relicense the
-LTX-2 base model, the Gemma text encoder, or the OminiVR LoRA weights
-themselves — those remain governed by the LTX-2 Community License
-Agreement and must be obtained from their respective official sources.
-
-================================================================================
-2. TinyDecoder (src/ominivr/tiny_decoder.py)
+2. TinyDecoder (packages/omini-restore-trainer/scripts/inference_tiny_decoder.py)
 ================================================================================
 
-`src/ominivr/tiny_decoder.py` is adapted from Seraena / TAESD, retrained
+`packages/omini-restore-trainer/scripts/inference_tiny_decoder.py` is adapted from Seraena / TAESD, retrained
 for LTX-2.3's 128-channel video latent space. The original work is:
 
     Copyright (c) 2023 Ollin Boer Bohan

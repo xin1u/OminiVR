@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+message: "If you use OmniVR, please cite the paper below."
+type: software
+title: "OmniVR and OmniVR-Flash inference"
+version: "2026.09.30"
+date-released: 2026-09-30
+url: "https://github.com/xin1u/OminiVR"
+authors:
+  - family-names: "Lu"
+    given-names: "Xin"
+  - family-names: "Fan"
+    given-names: "Zihao"
+  - family-names: "Huang"
+    given-names: "Jie"
+  - family-names: "Zhong"
+    given-names: "Mingchen"
+  - family-names: "Zhang"
+    given-names: "Hexin"
+  - family-names: "Fu"
+    given-names: "Xueyang"
+  - family-names: "Zha"
+    given-names: "Zheng-Jun"
+preferred-citation:
+  type: article
+  title: "OmniVR: Joint Audio-Video Conditional Generation for Archival Footage Restoration"
+  authors:
+    - family-names: "Lu"
+      given-names: "Xin"
+    - family-names: "Fan"
+      given-names: "Zihao"
+    - family-names: "Huang"
+      given-names: "Jie"
+    - family-names: "Zhong"
+      given-names: "Mingchen"
+    - family-names: "Zhang"
+      given-names: "Hexin"
+    - family-names: "Fu"
+      given-names: "Xueyang"
+    - family-names: "Zha"
+      given-names: "Zheng-Jun"
+  journal: "arXiv preprint arXiv:2608.04224"
+  year: 2026
+  url: "https://arxiv.org/abs/2608.04224"

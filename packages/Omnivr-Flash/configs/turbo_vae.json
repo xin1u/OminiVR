@@ -1,0 +1,18 @@
+{
+  "patch_size": 4,
+  "image_channels": 3,
+  "latent_channels": 128,
+  "encoder_channels": [128, 128, 128],
+  "decoder_channels": [512, 256, 128],
+  "blocks_per_stage": 3,
+  "spatial_scale": 8,
+  "temporal_scale": 8,
+  "encoder_spatial_factors": [2, 2, 2],
+  "encoder_temporal_factors": [2, 2, 2],
+  "decoder_spatial_factors": [2, 2, 2],
+  "decoder_temporal_factors": [2, 2, 2],
+  "activation": "relu",
+  "encoder_memory_init": "replicate",
+  "decoder_memory_init": "replicate",
+  "default_parallel": true
+}

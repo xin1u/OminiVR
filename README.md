@@ -1,304 +1,199 @@
 <div align="center">
 
-# 🎞️ OmniVR
+# OmniVR
 
-### Joint Video-Audio Conditional Generation for Restoring Degraded Historical Films
+### Joint Audio-Video Conditional Generation for Archival Footage Restoration
 
-**Xin Lu**<sup>†</sup> &nbsp; **Zihao Fan**<sup>†</sup> &nbsp; **Jie Huang**<sup>‡</sup> &nbsp; **Mingchen Zhong** &nbsp; **Xueyang Fu**<sup>✉</sup> &nbsp; **Zheng-Jun Zha**
+**Xin Lu**<sup>†</sup> · **Zihao Fan**<sup>†</sup> · **Jie Huang**<sup>‡</sup> · **Mingchen Zhong** · **Hexin Zhang** · **Xueyang Fu**<sup>✉</sup> · **Zheng-Jun Zha**
 
-University of Science and Technology of China (USTC)
+University of Science and Technology of China
 
-<sup>†</sup> Equal contribution &nbsp;&nbsp; <sup>‡</sup> Project leader &nbsp;&nbsp; <sup>✉</sup> Corresponding author
+<sup>†</sup> Equal contribution · <sup>‡</sup> Project leader · <sup>✉</sup> Corresponding author
 
-<a href="https://arxiv.org/abs/2608.04224"><img src="https://img.shields.io/badge/arXiv-Paper-red?logo=arxiv"></a> &nbsp;
-<a href="https://xin1u.github.io/OminiVR_PAGE/"><img src="https://img.shields.io/badge/Project-Page-Green"></a> &nbsp;
-<a href="https://huggingface.co/xin1u/OmniVR"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model%20%26%20Data-blue"></a> &nbsp;
-<a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-lightgrey.svg"></a>
-
-**First joint audio-video generative restoration** &nbsp;·&nbsp; **22B multimodal DiT** &nbsp;·&nbsp; **200-clip benchmark**
+[Latest manuscript · 30 Sep 2026](https://xin1u.github.io/OminiVR_PAGE/assets/OmniVR.pdf) · [arXiv:2608.04224](https://arxiv.org/abs/2608.04224) · [Project page](https://xin1u.github.io/OminiVR_PAGE/) · [GitHub](https://github.com/xin1u/OminiVR) · [Hugging Face](https://huggingface.co/xin1u/OmniVR)
 
 </div>
 
-<p align="center">
-  <img src="assets/teaser.png" width="100%">
-</p>
+**30 September 2026:** updated manuscript metadata and framework; complete Flash and multistep inference source is included below. Public multistep weights, benchmark files, and existing reference outputs remain available.
 
----
+## Abstract
 
-### 🌟 Abstract
+Archival footage often suffers from coupled visual and acoustic degradations, yet most restoration systems process the two modalities separately. To address this problem, we present OmniVR, the first systematic framework for joint audio-video restoration, covering data construction, model adaptation, efficient inference, and evaluation. We construct a high-quality audio-video corpus with detailed captions and use a joint degradation pipeline to produce aligned clean and degraded pairs. Using these pairs, we adapt a pretrained text-to-audio-video model (T2AV) by introducing degraded audio-video conditions (TAV2AV), then progressively replace sample captions with a fixed restoration prompt while retaining caption/null rehearsal. The resulting AV2AV model requires no user-provided text. Under a compatible residual-learning model, we prove that this condition-annealing schedule reduces gradient variance and expected restoration risk relative to direct fixed-prompt adaptation at the same training budget. For efficient deployment, OmniVR-Flash combines reduced-resolution video conditioning, MeanFlow-based one-step distillation, and Turbo VAE, achieving approximately 38 fps at 1K and 18 fps at 2K on a single B200 GPU. We further introduce OmniVRBench to evaluate four complementary dimensions: visual quality, audio quality, temporal consistency, and audio-visual synchrony. OmniVR achieves state-of-the-art results on public benchmarks and OmniVRBench. Data, code, and model weights will be released.
 
-Historical films suffer from co-occurring visual and audio degradations —
-blur, noise, flicker, hiss, clipping, and dropout — yet existing methods
-restore each modality independently, leaving quality gaps and cross-modal
-inconsistency. We present **OmniVR**, the first joint audio-video generative
-restoration model. Built upon a 22B-parameter audio-video generation
-backbone, OmniVR formulates restoration as conditional generation within a
-unified multimodal DiT: the low-quality video and audio are encoded as
-latent conditions, combined with a fixed restoration prompt, and jointly
-denoised to recover visual structure, temporal motion, and acoustic detail
-under one coordinated objective. Three key designs enable this adaptation:
-**(1)** a joint audio-video degradation pipeline that simulates real
-old-film characteristics from Internet-collected data; **(2)** an
-architecture-preserving text-to-audio-video (T2AV) to
-audio-video-to-audio-video (AV2AV) transition with prompt annealing that
-maximally retains the generative prior; and **(3)** first-frame
-image-to-video (I2V) anchoring with loss reweighting and waveform
-supervision for long-video extrapolation and audio fidelity. We also
-propose **OmniVRBench**, the first benchmark that evaluates audio-video
-restoration across visual quality, audio quality, temporal consistency, and
-audio-visual synchrony on 200 real historical clips. OmniVR surpasses all
-prior methods on all six visual metrics, achieves the best audio quality,
-and produces natural colorization — the first method to jointly address all
-three aspects.
+## Framework
 
----
+![OmniVR and OmniVR-Flash framework](assets/architecture.png)
 
-### 📰 News
+OmniVR and OmniVR-Flash framework. (a) Conditional SFT adapts a joint audiovisual DiT with degraded inputs and caption annealing to a fixed prompt. (b) AV MeanFlow enables one-step prediction. (c) Turbo VAE accelerates video encoding and decoding. (d) OmniVR-Flash downsamples LQ video before condition encoding and DiT injection, reducing conditioning cost while preserving high-resolution outputs. The last restored frame anchors the next window.
 
-- **Aug 2026 — Paper released on arXiv**:
-  [arXiv:2608.04224](https://arxiv.org/abs/2608.04224). 📄
-- **Aug 2026 — Inference code, LoRA weights, and OmniVRBench released** on
-  GitHub and [Hugging Face](https://huggingface.co/xin1u/OmniVR). 🎉
+[Vector framework (PDF)](assets/architecture.pdf) · [Latest manuscript](https://xin1u.github.io/OminiVR_PAGE/assets/OmniVR.pdf)
 
----
+## Install
 
-### 📋 TODO
-
-- ✅ Release inference code and LoRA weights
-- ✅ Release the OmniVRBench evaluation set
-- ⬜ Release training code and configs (not planned for this repository)
-
----
-
-### ✨ Key Contributions
-
-|  | Design | What it does |
-|:---:|---|---|
-| **1** | 🎨 **Joint AV Degradation** | A pipeline that simulates realistic old-film corruptions for both the visual and acoustic streams, producing paired LQ audio-video for training. |
-| **2** | 🧩 **Prior-Preserving AV2AV** | A 22B multimodal DiT adapted via LoRA (rank 384) with paired latent conditions and prompt annealing, maximally retaining the generative prior. |
-| **3** | 🎬 **Coherent Long-Video Recovery** | First-frame (I2V) chaining, loss reweighting, and waveform supervision for temporally consistent, audio-fidelity-preserving long-form restoration. |
-| **4** | 📈 **OmniVRBench** | 200 real historical film clips across a `with_gt` (71-clip, full-reference) and a `no_gt` (129-clip, no-reference) track. |
-
----
-
-### 🚀 Getting Started
-
-#### 1️⃣ Clone the Repository
+Use Python 3.12, a CUDA GPU with BF16 support, and FFmpeg with H.264/AAC
+encoding. The source packages are bundled and loaded relative to the
+entry-point files; no external LTX checkout or training package is needed.
 
 ```bash
 git clone https://github.com/xin1u/OminiVR.git
 cd OminiVR
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --index-url https://download.pytorch.org/whl/cu128 \
+    torch==2.9.1 torchaudio==2.9.1 torchvision==0.24.1
+python -m pip install -r requirements.txt
+ffmpeg -version
+python infer.py --help
+python infer_multistep.py --help
 ```
 
-#### 2️⃣ Install Dependencies
+The 22B backbone and video window must fit the selected device. Flash keeps
+the models resident on one GPU; multistep inference supports VAE tiling and
+model offload. Neither command shards one video across multiple GPUs.
 
-OmniVR is a LoRA adapter for Lightricks' [LTX-2](https://github.com/Lightricks/LTX-2)
-and depends on its `ltx-core` / `ltx-trainer` / `ltx-pipelines` packages,
-which are not vendored here:
+## Inference
 
-```bash
-pip install -e .
-
-git clone https://github.com/Lightricks/LTX-2.git /path/to/ltx-2
-export OMINIVR_DEPS_ROOT=/path/to/ltx-2/packages
-```
-
-#### 3️⃣ Download Model Weights and Data
-
-All large binaries (base model, LoRA checkpoints, TinyDecoder, evaluation
-set) are hosted on Hugging Face rather than in this git repository. OmniVR's
-own weights, data, and reference outputs are all in a single repo,
-[`xin1u/OmniVR`](https://huggingface.co/xin1u/OmniVR):
-
-| What | Source | Notes |
+| | OmniVR-Flash | OmniVR multistep |
 |---|---|---|
-| Base model + Gemma text encoder | [`Lightricks/LTX-2.3`](https://huggingface.co/Lightricks) | official upstream weights; governed by the [LTX-2 Community License](https://github.com/Lightricks/LTX-2/blob/main/LICENSE) |
-| OmniVR LoRA weights (`step_01800`, `step_02400`) | [`xin1u/OmniVR`](https://huggingface.co/xin1u/OmniVR)`/weights/` | see [NOTICE](NOTICE) — these are a Derivative of LTX-2 |
-| TinyDecoder weights (`taeltx2_3_wide.pth`) | [`xin1u/OmniVR`](https://huggingface.co/xin1u/OmniVR)`/tinydecoder/` | see [`ckpt/tinydecoder/README.md`](ckpt/tinydecoder/README.md) |
-| OmniBench evaluation set | [`xin1u/OmniVR`](https://huggingface.co/xin1u/OmniVR)`/omnibench/` | see [`data/omnibench/README.md`](data/omnibench/README.md) |
-| Reference inference outputs | [`xin1u/OmniVR`](https://huggingface.co/xin1u/OmniVR)`/predictions/` | precomputed restorations for both tracks, for quick comparison without rerunning inference |
+| Entry point | `infer.py` | `infer_multistep.py` |
+| Sampling | One Euler update, `sigma = [1, 0]` | Configurable Euler steps, CFG and STG |
+| Video VAE | UltraTinyVAE encoder and decoder | Full LTX video VAE by default |
+| Restoration checkpoint | Additive-conditioning Flash LoRA | Channel-concat OmniVR LoRA |
+| Text | Fixed prompt cache | Fixed prompt cache or live Gemma encoding |
+| Input | File or directory; video and audio required | Directory of MP4 files |
 
-We release two LoRA checkpoints from the same training run
-(`v5_tav2av_hq`), matching the two evaluation tracks in the paper:
+### OmniVR-Flash
 
-- **`step_01800`** — used for the `no_gt` / real-footage (no-reference) track
-- **`step_02400`** — used for the `with_gt` / talking-head (full-reference) track
+Flash requires **three compatible project artifacts**: its additive-conditioning
+LoRA, an UltraTinyVAE checkpoint matching the bundled architecture JSON, and
+the fixed prompt cache. These artifacts are **not yet included in the public
+model repository**. The existing `ominivr_lora_step_01800/02400` and
+`taeltx2_3_wide.pth` files are for the multistep/legacy decoder path and cannot
+be substituted for Flash weights.
 
 ```bash
-huggingface-cli download xin1u/OmniVR weights/ominivr_lora_step_01800.safetensors --local-dir .
-huggingface-cli download xin1u/OmniVR weights/ominivr_lora_step_02400.safetensors --local-dir .
-huggingface-cli download xin1u/OmniVR tinydecoder/taeltx2_3_wide.pth --local-dir ckpt
-
-export OMINIVR_MODEL_PATH=/path/to/ltx-2.3-22b-dev.safetensors
-export OMINIVR_TEXT_ENCODER_PATH=/path/to/gemma-3-12b-it-qat-q4_0-unquantized
-export OMINIVR_LORA_STRUCTURE=/path/to/ltx-2.3-22b-distilled-lora-384.safetensors
+CUDA_VISIBLE_DEVICES=0 python infer.py \
+    --input /path/to/input.mp4 \
+    --output /path/to/restored.mp4 \
+    --model-path /path/to/ltx-2.3-22b-dev.safetensors \
+    --checkpoint /path/to/flash_lora.safetensors \
+    --turbo-vae /path/to/turbo_vae.pth \
+    --prompt-cache /path/to/flash_prompt_embeddings.pt \
+    --width 1920 --height 1080 --frames 121 --frame-rate 24 \
+    --verify-output --write-metadata
 ```
 
-`OMINIVR_LORA_STRUCTURE` only needs to point at *some* checkpoint sharing the
-LoRA's target-module/rank structure (used to reconstruct the PEFT config
-before loading weights); it defaults to `--checkpoint` itself if unset.
+For directory input, replace `--input` / `--output` with `--input-dir` /
+`--output-dir`. The models are loaded once and reused. Each source produces
+its first requested window. `--frames` must be `8n+1`; short inputs produce
+an error. Dimensions are padded to multiples of 32 internally and cropped
+back for export. Existing outputs require `--overwrite` to replace them.
 
-#### 4️⃣ Run Inference
+### OmniVR multistep
+
+Obtain the base model from [Lightricks/LTX-2.3](https://huggingface.co/Lightricks/LTX-2.3)
+and the text encoder from
+[google/gemma-3-12b-it-qat-q4_0-unquantized](https://huggingface.co/google/gemma-3-12b-it-qat-q4_0-unquantized),
+following their access and license terms. Download a public OmniVR checkpoint:
 
 ```bash
-python scripts/infer.py \
-    --input_dir data/omnibench/no_gt \
-    --output_dir /path/to/output \
-    --checkpoint /path/to/ominivr_lora_step_01800.safetensors \
-    --strategy neg_cfg \
-    --guidance_scale 3.0 \
-    --num_steps 30 \
+hf download xin1u/OmniVR weights/ominivr_lora_step_01800.safetensors --local-dir .
+# Controlled-track alternative:
+hf download xin1u/OmniVR weights/ominivr_lora_step_02400.safetensors --local-dir .
+
+CUDA_VISIBLE_DEVICES=0 python infer_multistep.py \
+    --input_dir /path/to/lq_videos \
+    --output_dir /path/to/restored \
+    --model_path /path/to/ltx-2.3-22b-dev.safetensors \
+    --text_encoder_path /path/to/gemma-3-12b-it-qat-q4_0-unquantized \
+    --checkpoint weights/ominivr_lora_step_01800.safetensors \
+    --strategy neg_cfg --guidance_scale 3.0 --num_steps 30 \
     --condition_noise 0.3 \
-    --width 1920 --height 1088 --max_frames 121 --frame_rate 24 \
-    --stg_scale 1.0 --stg_blocks 29 --stg_mode stg_av \
-    --audio_denoise --audio_denoise_highpass 200 --audio_denoise_over 2.5 --audio_denoise_floor 0.03
+    --width 1920 --height 1088 --max_frames 121 --frame_rate 24
 ```
 
----
+The public `step_01800` checkpoint is associated with the real/no-reference
+track; `step_02400` is associated with the controlled/full-reference track.
+The example uses the existing 30-step command; the paper's Flash efficiency
+comparison uses a 15-step base model. Sampling and guidance settings affect
+both output and runtime.
 
-### ⚙️ Key Options
+`--strategy` also accepts `no_cfg`, `empty_cfg`, and `all`. Optional STG is
+controlled by `--stg_scale`, `--stg_blocks`, and `--stg_mode`. Use
+`--num_gpus N` to distribute different input videos across N visible GPUs.
+`--audio_denoise` enables the optional audio postprocessing path.
 
-| Option | Description |
+The old command `python scripts/infer.py ...` remains available. Existing
+`OMINIVR_MODEL_PATH`, `OMINIVR_TEXT_ENCODER_PATH`, and
+`OMINIVR_LORA_STRUCTURE` environment variables are accepted. A compatible
+`--prompt_cache` skips Gemma loading; otherwise Gemma is required. For the
+optional decoder-only TAEHV checkpoint, see
+[the legacy TinyDecoder instructions](ckpt/tinydecoder/README.md).
+
+### Release scope
+
+Both commands include their model loaders, conditioning code, media I/O,
+and shared LTX runtime. The supplied export processes clip windows. It does
+not expose the reduced-resolution Flash conditioning or automatic
+last-frame window chaining depicted in the paper, and its runtime has not
+been equated with the paper's optimized benchmark. Training loops and
+evaluation scripts are outside this inference release.
+
+See [the detailed inference guide](docs/inference.md) for checkpoint tensor
+formats, prompt-cache fields, VAE geometry, tiling, and output validation.
+
+## OmniVRBench and public artifacts
+
+OmniVRBench contains **200 clips**: 71 controlled clips with clean targets
+and 129 real archival clips without ground truth. Evaluation covers visual
+quality, audio quality, temporal consistency, and audiovisual synchrony.
+
+| Artifact | Location |
 |---|---|
-| `--strategy no_cfg` | guidance_scale=1.0, single forward per step (**fastest**) |
-| `--strategy empty_cfg` | positive=SR prompt, negative=empty string (matches training distribution) |
-| `--strategy neg_cfg` | positive=SR prompt, negative=negative prompt (**strongest enhancement**, used for the paper's numbers) |
-| `--strategy all` | runs all three strategies on the same inputs, for comparison |
-| `--lq_grayscale` | Pass when restoring genuinely black-and-white old film footage — training degraded ~50% of clips to grayscale, so the model expects a grayscale LQ signal for that case. |
-| `--num_gpus N` | Data-parallelize across `N` GPUs (each GPU processes a disjoint subset of input videos, round-robin). There is no FSDP/single-video-sharded inference mode in this release. |
+| Multistep LoRA checkpoints | [https://huggingface.co/xin1u/OmniVR/tree/main/weights](https://huggingface.co/xin1u/OmniVR/tree/main/weights) |
+| Optional legacy TinyDecoder | [https://huggingface.co/xin1u/OmniVR/tree/main/tinydecoder](https://huggingface.co/xin1u/OmniVR/tree/main/tinydecoder) |
+| Benchmark and manifest | [https://huggingface.co/xin1u/OmniVR/tree/main/omnibench](https://huggingface.co/xin1u/OmniVR/tree/main/omnibench) |
+| Existing multistep reference outputs | [https://huggingface.co/xin1u/OmniVR/tree/main/predictions](https://huggingface.co/xin1u/OmniVR/tree/main/predictions) |
 
-**TinyDecoder**: if `ckpt/tinydecoder/taeltx2_3_wide.pth` is present,
-inference uses the fast TinyDecoder path (keeps the transformer resident on
-GPU). If absent, it falls back automatically to the full VAE decoder
-(slower, tiled to control memory).
+## Paper-reported efficiency
 
----
+The September 30 manuscript reports the following measurements on one
+NVIDIA B200 for 121-frame windows (Tables 22–23):
 
-### 🎬 Demo
+| Configuration | Steps | 1920 × 1088 (1K) | 2560 × 1440 (2K) |
+|---|---:|---:|---:|
+| OmniVR base | 15 | 3.5 fps | 1.5 fps |
+| OmniVR-Flash, all three optimizations | 1 | 38.2 fps | 17.8 fps |
 
-Drag the divider to compare the degraded input against the OmniVR
-restoration, and A/B the soundtrack — see the [project page](https://xin1u.github.io/OminiVR_PAGE/)
-for the full interactive version with all clips.
+The Flash configuration in the paper combines reduced-resolution
+conditioning, MeanFlow one-step distillation, and Turbo VAE. These are
+paper measurements, not new benchmarks of this exported code.
 
-<p align="center">
-  <img src="./assets/demo.png" width="850">
-</p>
+## License and acknowledgments
 
----
+The current inference bundle and LTX-derived model weights use the
+[LTX-2 Community License Agreement](LICENSE), including its attachments.
+Bundled LTX components retain their upstream notices. The optional legacy
+TAEHV implementation retains its MIT attribution in [NOTICE](NOTICE).
+Earlier Apache-2.0 attribution is retained in `licenses/Apache-2.0.txt`.
+The Google Gemma text encoder remains subject to its own upstream terms.
 
-### 🛠️ Method
+We acknowledge [Lightricks/LTX-2](https://github.com/Lightricks/LTX-2) and
+[Seraena/TAESD](https://github.com/madebyollin/seraena).
 
-The overview of **OmniVR**. This framework features:
-
-* **Joint AV Degradation** — a pipeline that simulates realistic old-film
-  corruptions for both visual and acoustic streams.
-* **Prior-Preserving AV2AV** — a 22B multimodal DiT adapted via LoRA
-  (rank 384) with paired latent conditions and prompt annealing, injecting
-  the LQ condition by expanding `patchify_proj` from `Linear(128, dim)` to
-  `Linear(256, dim)` and channel-concatenating the noisy latent with the LQ
-  latent at each denoising step.
-* **Coherent Long-Video Recovery** — first-frame (I2V) chaining, loss
-  reweighting, and waveform supervision for temporally consistent,
-  audio-fidelity-preserving long-form restoration.
-* **OmniVRBench** — 200 real historical film clips across a `with_gt`
-  (71-clip, full-reference) talking-head track and a `no_gt` (129-clip,
-  no-reference) real-archival track.
-
-<p align="center">
-  <img src="./assets/architecture.png" width="1000">
-</p>
-
----
-
-### 📊 Results
-
-OmniVR surpasses all baselines on OmniVRBench's controlled (`with_gt`, 71
-clips) and real (`no_gt`, 129 clips) tracks across visual, audio, and
-sync metrics, and generalizes to the independently curated RTN old-film
-benchmark:
-
-| Track | MUSIQ ↑ | CLIP-IQA ↑ | DNSMOS ↑ | LSE-C ↑ |
-|---|:---:|:---:|:---:|:---:|
-| Controlled (`with_gt`) — best baseline | 45.54 | 0.268 | 2.12 | 2.32 |
-| Controlled (`with_gt`) — **OmniVR** | **71.17** | **0.543** | **2.70** | **3.52** |
-| Real (`no_gt`) — best baseline | 52.38 | 0.421 | 2.21 | 1.05 |
-| Real (`no_gt`) — **OmniVR** | **61.87** | **0.444** | **2.43** | **1.12** |
-
-A pairwise human preference study (12 annotators, 129 real clips) prefers
-OmniVR **80.0%** overall, a **+56.7 percentage point** gain over the strongest
-baseline. Full tables, ablations, and qualitative comparisons are in the
-paper.
-
----
-
-### 📈 Evaluation
-
-**OmniVRBench** contains 200 clips at 5.04s / 24fps / 121 frames, split into
-two tracks by whether ground truth exists:
-
-| | `with_gt/` (71 clips) | `no_gt/` (129 clips) |
-|---|---|---|
-| **Content** | Talking-head / speaking subjects | Real historical film footage |
-| **Source** | LQ synthesized from HQ via the degradation pipeline; GT = clean HQ | Collected real old films (inherently LQ) |
-| **Ground truth** | ✅ frame-aligned, same filenames | ❌ does not exist |
-| **Evaluation track** | **Controlled** (full-reference) | **Real** (no-reference) |
-| **Applicable metrics** | PSNR/SSIM/LPIPS, PESQ/STOI/SI-SDR, LSE-C/D, AV-Align, plus NR-IQA | NR-IQA only: MUSIQ/CLIP-IQA/MANIQA + no-reference audio |
-
-See [`data/omnibench/README.md`](data/omnibench/README.md) for the dataset
-layout and the `with_gt`/`no_gt` track split. The evaluation script itself
-(PSNR/SSIM/LPIPS, PESQ/STOI/SI-SDR, LSE-C/D, AV-Align, NR-IQA, etc.) is not
-included in this release — predictions and ground truth match by filename,
-so any standard implementation of these metrics can be plugged in directly.
-
-Precomputed reference outputs (`neg_cfg`, the strategy used for the paper's
-numbers) for both tracks are available under `predictions/` in the
-[`xin1u/OmniVR`](https://huggingface.co/xin1u/OmniVR) Hugging Face repo, if
-you want to compare against them without rerunning inference yourself.
-
----
-
-### 🤗 Feedback & Support
-
-We welcome feedback and issues. Thank you for trying **OmniVR**!
-
----
-
-### 📄 License & Acknowledgments
-
-OmniVR's own code (`src/`, `scripts/`, excluding the vendored TinyDecoder
-noted below) is licensed under [Apache-2.0](LICENSE).
-
-> ⚠️ The released LoRA weights are a **Derivative of LTX-2** and are governed by
-> the [LTX-2 Community License Agreement](https://github.com/Lightricks/LTX-2/blob/main/LICENSE),
-> **not** Apache-2.0 — see [NOTICE](NOTICE) for details. The base LTX-2.3 model and
-> Gemma text encoder must be obtained from their official sources and are
-> likewise subject to that license.
-
-`src/ominivr/tiny_decoder.py` is adapted from Ollin Boer Bohan's
-Seraena/TAESD (MIT License) — full attribution in [NOTICE](NOTICE).
-
-We gratefully acknowledge:
-
-* [**LTX-2**](https://github.com/Lightricks/LTX-2) — the audio-video generation backbone
-* [**Seraena / TAESD**](https://github.com/madebyollin/seraena) — the tiny decoder this repository vendors
-
----
-
-### 📞 Contact
-
-Please feel free to contact us if there is any question (luxion@mail.ustc.edu.cn).
-
----
-
-### 📜 Citation
-
-Paper: [arXiv:2608.04224](https://arxiv.org/abs/2608.04224)
+## Citation
 
 ```bibtex
 @article{lu2026omnivr,
-  title={OmniVR: Joint Video-Audio Conditional Generation for Restoring Degraded Historical Films},
-  author={Lu, Xin and Fan, Zihao and Zhong, Mingchen and Huang, Jie and Fu, Xueyang and Zha, Zheng-Jun},
+  title={OmniVR: Joint Audio-Video Conditional Generation for Archival Footage Restoration},
+  author={Lu, Xin and Fan, Zihao and Huang, Jie and Zhong, Mingchen and Zhang, Hexin and Fu, Xueyang and Zha, Zheng-Jun},
   journal={arXiv preprint arXiv:2608.04224},
-  year={2026}
+  year={2026},
+  eprint={2608.04224},
+  archivePrefix={arXiv},
+  primaryClass={cs.CV},
+  url={https://arxiv.org/abs/2608.04224}
 }
 ```
+
+Contact: [luxion@mail.ustc.edu.cn](mailto:luxion@mail.ustc.edu.cn).

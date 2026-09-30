@@ -1,0 +1,14 @@
+torch==2.9.1
+torchaudio==2.9.1
+torchvision==0.24.1
+torchcodec==0.9.1
+einops
+numpy
+transformers>=4.57,<5
+safetensors>=0.5.0
+accelerate
+scipy>=1.14
+peft>=0.14.0
+av>=14.2.1
+tqdm
+pillow

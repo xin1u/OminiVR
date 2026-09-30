@@ -1,21 +1,18 @@
-# TinyDecoder weights
+# Optional legacy TinyDecoder
 
-`taeltx2_3_wide.pth` — decoder-only weights for the `TAEHV` module in
-[`src/ominivr/tiny_decoder.py`](../../src/ominivr/tiny_decoder.py). Fast
-latent→pixel decode path used in place of the full VAE decoder (~38MB vs.
-loading the full video VAE decoder, and stays resident on GPU alongside the
-transformer during inference).
+`taeltx2_3_wide.pth` is the decoder-only TAEHV checkpoint from the earlier
+OmniVR release. Its implementation is bundled in
+[`inference_tiny_decoder.py`](../../packages/omini-restore-trainer/scripts/inference_tiny_decoder.py).
+Attribution and its MIT license are retained in [NOTICE](../../NOTICE).
 
-Retrained on LTX-2.3's 128-channel video latent space; architecture and
-training approach adapted from Ollin Boer Bohan's Seraena/TAESD (MIT
-License) — see [`/NOTICE`](../../NOTICE) for full attribution.
-
-## Download
+The multistep entry point uses the full LTX video VAE by default. To select
+the legacy decoder explicitly:
 
 ```bash
-huggingface-cli download xin1u/OmniVR tinydecoder/taeltx2_3_wide.pth --local-dir ckpt
-# lands at ckpt/tinydecoder/taeltx2_3_wide.pth
+hf download xin1u/OmniVR tinydecoder/taeltx2_3_wide.pth --local-dir ckpt
+# Add this option to the multistep command:
+# --tiny_decoder ckpt/tinydecoder/taeltx2_3_wide.pth
 ```
 
-If this file is absent, `scripts/infer.py` falls back to the full VAE decoder
-automatically (slower, more memory).
+This checkpoint cannot replace the Flash Turbo VAE: Flash requires both an
+UltraTinyVAE encoder and decoder matching the bundled `configs/turbo_vae.json`.
