@@ -10,11 +10,11 @@ University of Science and Technology of China
 
 <sup>†</sup> Equal contribution · <sup>‡</sup> Project leader · <sup>✉</sup> Corresponding author
 
-[![Latest manuscript · 30 Sep 2026](assets/badges/paper.svg)](https://xin1u.github.io/OminiVR_PAGE/assets/OmniVR.pdf)
-[![arXiv:2608.04224](assets/badges/arxiv.svg)](https://arxiv.org/abs/2608.04224)
-[![Project page](assets/badges/project.svg)](https://xin1u.github.io/OminiVR_PAGE/)
-[![GitHub source code](assets/badges/github.svg)](https://github.com/xin1u/OminiVR)
-[![Hugging Face models and code](assets/badges/huggingface.svg)](https://huggingface.co/xin1u/OmniVR)
+[![Latest manuscript · 30 Sep 2026](assets/badges/paper.svg?style=flat-v2)](https://xin1u.github.io/OminiVR_PAGE/assets/OmniVR.pdf) &nbsp;
+[![arXiv:2608.04224](assets/badges/arxiv.svg?style=flat-v2)](https://arxiv.org/abs/2608.04224) &nbsp;
+[![Project page](assets/badges/project.svg?style=flat-v2)](https://xin1u.github.io/OminiVR_PAGE/) &nbsp;
+[![GitHub source code](assets/badges/github.svg?style=flat-v2)](https://github.com/xin1u/OminiVR) &nbsp;
+[![Hugging Face models and code](assets/badges/huggingface.svg?style=flat-v2)](https://huggingface.co/xin1u/OmniVR)
 
 </div>
 
