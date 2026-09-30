@@ -20,6 +20,14 @@ University of Science and Technology of China
 
 Archival footage often suffers from coupled visual and acoustic degradations, yet most restoration systems process the two modalities separately. To address this problem, we present OmniVR, the first systematic framework for joint audio-video restoration, covering data construction, model adaptation, efficient inference, and evaluation. We construct a high-quality audio-video corpus with detailed captions and use a joint degradation pipeline to produce aligned clean and degraded pairs. Using these pairs, we adapt a pretrained text-to-audio-video model (T2AV) by introducing degraded audio-video conditions (TAV2AV), then progressively replace sample captions with a fixed restoration prompt while retaining caption/null rehearsal. The resulting AV2AV model requires no user-provided text. Under a compatible residual-learning model, we prove that this condition-annealing schedule reduces gradient variance and expected restoration risk relative to direct fixed-prompt adaptation at the same training budget. For efficient deployment, OmniVR-Flash combines reduced-resolution video conditioning, MeanFlow-based one-step distillation, and Turbo VAE, achieving approximately 38 fps at 1K and 18 fps at 2K on a single B200 GPU. We further introduce OmniVRBench to evaluate four complementary dimensions: visual quality, audio quality, temporal consistency, and audio-visual synchrony. OmniVR achieves state-of-the-art results on public benchmarks and OmniVRBench. Data, code, and model weights will be released.
 
+## Data pipeline
+
+![OmniVR audiovisual data pipeline](assets/data-pipeline.png)
+
+Shot-aligned audiovisual data pipeline. Synchronized 3–20 s shots pass the listed quality/safety operators; Gemini combines shot context, frames, and audio evidence into one structured caption. Caption JSON, severity metadata, and clean/LQ pairs remain aligned for TAV2AV training and high-resolution refiner supervision. The boxing example uses archived frames and measured waveforms/spectra; the degraded video is additionally grayscaled for visualization.
+
+[Vector PDF](assets/data-pipeline.pdf) · [High-resolution PNG](assets/data-pipeline.png) · [Figure 3 in the manuscript](https://xin1u.github.io/OminiVR_PAGE/assets/OmniVR.pdf#page=5)
+
 ## Framework
 
 ![OmniVR and OmniVR-Flash framework](assets/architecture.png)
