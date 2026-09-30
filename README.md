@@ -237,8 +237,9 @@ TAEHV implementation retains its MIT attribution in [NOTICE](NOTICE).
 Earlier Apache-2.0 attribution is retained in `licenses/Apache-2.0.txt`.
 The Google Gemma text encoder remains subject to its own upstream terms.
 
-We acknowledge [Lightricks/LTX-2](https://github.com/Lightricks/LTX-2) and
-[Seraena/TAESD](https://github.com/madebyollin/seraena).
+We acknowledge [Lightricks/LTX-2](https://github.com/Lightricks/LTX-2),
+[Seraena/TAESD](https://github.com/madebyollin/seraena), and
+[UltraFlash](https://github.com/xin1u/UltraFlash).
 
 ## Citation
 
