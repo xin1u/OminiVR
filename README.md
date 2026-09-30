@@ -114,9 +114,8 @@ CUDA_VISIBLE_DEVICES=0 python infer_multistep.py \
 
 The public `step_01800` checkpoint is associated with the real/no-reference
 track; `step_02400` is associated with the controlled/full-reference track.
-The example uses the existing 30-step command; the paper's Flash efficiency
-comparison uses a 15-step base model. Sampling and guidance settings affect
-both output and runtime.
+The example uses the existing 30-step configuration. The main-text benchmark
+configuration is specified in [Benchmark results](#benchmark-results).
 
 `--strategy` also accepts `no_cfg`, `empty_cfg`, and `all`. Optional STG is
 controlled by `--stg_scale`, `--stg_blocks`, and `--stg_mode`. Use
@@ -135,8 +134,7 @@ optional decoder-only TAEHV checkpoint, see
 Both commands include their model loaders, conditioning code, media I/O,
 and shared LTX runtime. The supplied export processes clip windows. It does
 not expose the reduced-resolution Flash conditioning or automatic
-last-frame window chaining depicted in the paper, and its runtime has not
-been equated with the paper's optimized benchmark. Training loops and
+last-frame window chaining depicted in the paper. Training loops and
 evaluation scripts are outside this inference release.
 
 See [the detailed inference guide](docs/inference.md) for checkpoint tensor
@@ -155,19 +153,68 @@ quality, audio quality, temporal consistency, and audiovisual synchrony.
 | Benchmark and manifest | [https://huggingface.co/xin1u/OmniVR/tree/main/omnibench](https://huggingface.co/xin1u/OmniVR/tree/main/omnibench) |
 | Existing multistep reference outputs | [https://huggingface.co/xin1u/OmniVR/tree/main/predictions](https://huggingface.co/xin1u/OmniVR/tree/main/predictions) |
 
-## Paper-reported efficiency
+## Benchmark results
 
-The September 30 manuscript reports the following measurements on one
-NVIDIA B200 for 121-frame windows (Tables 22–23):
+Results from Tables 1–4 in the [latest manuscript](https://xin1u.github.io/OminiVR_PAGE/assets/OmniVR.pdf#page=9). Automatic results use the multistep OmniVR configuration in Section 3.6: the 50K-step checkpoint, 15 Euler steps, CFG 3.0, and condition noise 0.5. ↑ / ↓ indicate higher / lower is better; – denotes an unreported metric.
 
-| Configuration | Steps | 1920 × 1088 (1K) | 2560 × 1440 (2K) |
-|---|---:|---:|---:|
-| OmniVR base | 15 | 3.5 fps | 1.5 fps |
-| OmniVR-Flash, all three optimizations | 1 | 38.2 fps | 17.8 fps |
+### RTN (Table 1)
 
-The Flash configuration in the paper combines reduced-resolution
-conditioning, MeanFlow one-step distillation, and Turbo VAE. These are
-paper measurements, not new benchmarks of this exported code.
+3 archival sequences, 600 frames, no ground truth; visual evaluation at 640 × 480.
+
+| Method | MUSIQ ↑ | CLIP-IQA ↑ | NIQE ↓ | MANIQA ↑ | TOPIQ ↑ | BRISQUE ↓ |
+|---|---:|---:|---:|---:|---:|---:|
+| Low-quality input | 38.71 | 0.258 | 5.94 | 0.188 | 0.267 | 44.66 |
+| DeepRemaster | 39.01 | 0.263 | 6.31 | 0.196 | 0.273 | 41.00 |
+| RealBasicVSR | 52.18 | 0.362 | 5.87 | 0.285 | 0.438 | 38.72 |
+| DDColor | 38.79 | 0.284 | 5.69 | 0.175 | 0.271 | 41.49 |
+| ColorMNet | 38.52 | 0.378 | 5.75 | 0.184 | 0.266 | 42.92 |
+| MambaOFR | 49.83 | 0.351 | 5.42 | 0.312 | 0.421 | 39.56 |
+| **OmniVR (ours)** | **64.77** | **0.426** | **5.14** | **0.330** | **0.553** | **35.90** |
+
+### OmniVRBench: controlled degradation (Table 2)
+
+71 clips with clean references; visual evaluation at 640 × 480. GT denotes the clean reference and is excluded from method comparisons.
+
+| Method | MUSIQ ↑ | CLIP-IQA ↑ | NIQE ↓ | MANIQA ↑ | TOPIQ ↑ | BRISQUE ↓ | DNSMOS ↑ | FAD ↓ | LSE-C ↑ | LSE-D ↓ |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Low-quality input | 38.77 | 0.221 | 6.69 | 0.218 | 0.235 | 36.69 | 1.46 | 7.88 | 2.32 | 10.87 |
+| DeepRemaster | 37.43 | 0.173 | 6.20 | 0.189 | 0.245 | 35.83 | – | – | – | – |
+| RealBasicVSR | 45.54 | 0.226 | 7.08 | 0.294 | 0.326 | 44.96 | – | – | – | – |
+| VoiceFixer (audio only) | – | – | – | – | – | – | 2.12 | 7.02 | 1.98 | 11.53 |
+| DDColor | 34.07 | 0.200 | 6.34 | 0.200 | 0.250 | 33.61 | – | – | – | – |
+| ColorMNet | 34.64 | 0.243 | 6.59 | 0.228 | 0.253 | 35.98 | – | – | – | – |
+| MambaOFR | 43.49 | 0.268 | 6.99 | 0.280 | 0.305 | 42.80 | – | – | – | – |
+| **OmniVR (ours)** | **71.17** | **0.543** | **4.11** | **0.487** | **0.673** | **24.75** | **2.70** | **6.30** | **3.52** | **10.43** |
+| Clean reference (GT) | 67.49 | 0.558 | 4.03 | 0.477 | 0.623 | 25.48 | 2.47 | – | 4.00 | 9.44 |
+
+### OmniVRBench: real archival footage (Table 3)
+
+129 clips without ground truth; visual evaluation at 640 × 480.
+
+| Method | MUSIQ ↑ | CLIP-IQA ↑ | NIQE ↓ | MANIQA ↑ | TOPIQ ↑ | BRISQUE ↓ | DNSMOS ↑ | FAD ↓ | LSE-C ↑ | LSE-D ↓ |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Low-quality input | 36.55 | 0.311 | 5.69 | 0.195 | 0.248 | 45.27 | 2.04 | 15.93 | 1.05 | 12.14 |
+| DeepRemaster | 38.78 | 0.237 | 7.83 | 0.191 | 0.246 | 48.53 | – | – | – | – |
+| RealBasicVSR | 52.38 | 0.401 | 5.82 | 0.342 | 0.468 | 38.15 | – | – | – | – |
+| VoiceFixer (audio only) | – | – | – | – | – | – | 2.21 | 9.41 | 0.87 | 13.26 |
+| DDColor | 37.51 | 0.307 | 5.49 | 0.164 | 0.278 | 39.21 | – | – | – | – |
+| ColorMNet | 38.64 | 0.421 | 5.59 | 0.174 | 0.275 | 42.74 | – | – | – | – |
+| MambaOFR | 49.59 | 0.394 | 5.62 | 0.331 | 0.440 | 44.00 | – | – | – | – |
+| **OmniVR (ours)** | **61.87** | **0.444** | **5.40** | **0.383** | **0.531** | **36.02** | **2.43** | **8.32** | **1.12** | **11.39** |
+
+### Human preference (Table 4)
+
+Mean pairwise 2AFC win rates (%) on 129 archival clips, judged by 12 annotators. The gain row is measured in percentage points.
+
+| Method | Visual ↑ | Audio ↑ | Sync ↑ | Overall ↑ |
+|---|---:|---:|---:|---:|
+| LQ input | 19.5 | 24.2 | 27.0 | 21.1 |
+| MambaOFR + VoiceFixer | 46.7 | 48.7 | 48.3 | 47.7 |
+| RealBasicVSR + VoiceFixer | 58.0 | 54.9 | 53.5 | 56.5 |
+| Old Films + VoiceFixer | 43.7 | 43.9 | 43.8 | 44.1 |
+| Pretrained AV gen. | 39.8 | 38.9 | 39.8 | 39.6 |
+| **OmniVR (ours)** | **92.2** | **89.4** | **87.6** | **91.0** |
+| Gain vs. best baseline | +34.2 pp | +34.5 pp | +34.1 pp | +34.5 pp |
 
 ## License and acknowledgments
 
